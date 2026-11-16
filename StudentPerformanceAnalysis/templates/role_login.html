@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Login</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+        }
+
+        .login-card {
+            width: 390px;
+            max-width: 100%;
+            padding: 38px 32px;
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(30, 20, 80, 0.25);
+            text-align: center;
+        }
+
+        .icon {
+            width: 76px;
+            height: 76px;
+            margin: 0 auto 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 22px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-size: 34px;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            color: #25264a;
+            font-size: 26px;
+        }
+
+        .subtitle {
+            color: #77778c;
+            margin-bottom: 28px;
+            font-size: 14px;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin: 17px 0 7px;
+            color: #343451;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #dedeee;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            background: #fafaff;
+        }
+
+        input:focus {
+            border-color: #7965d9;
+            box-shadow: 0 0 0 3px #7965d925;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(100deg, #667eea, #764ba2);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .message {
+            color: #c62828;
+            background: #fff0f0;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 23px;
+            color: #6654b8;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            margin-top: 25px;
+            color: #9999aa;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-card">
+
+        <div class="icon">🎓</div>
+
+        {% if role == 'admin' %}
+            <h1>Staff Login</h1>
+            <p class="subtitle">Manage students and academic records</p>
+        {% else %}
+            <h1>Student Portal</h1>
+            <p class="subtitle">View your results and track your progress</p>
+        {% endif %}
+
+        {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+                <p class="message">{{ message }}</p>
+            {% endfor %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('role_login', role=role) }}">
+            <label for="username">Username</label>
+            <input id="username" type="text" name="username"
+                   placeholder="Enter your username" required>
+
+            <label for="password">Password</label>
+            <input id="password" type="password" name="password"
+                   placeholder="Enter your password" required>
+
+            <button type="submit">Login to Portal →</button>
+        </form>
+
+        <a class="back" href="{{ url_for('login') }}">← Back to Home</a>
+
+        <div class="footer">Student Performance Analysis System</div>
+    </div>
+</body>
+</html>

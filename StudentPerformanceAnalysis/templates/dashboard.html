@@ -1,0 +1,576 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Performance Dashboard</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f6fc;
+            color: #252b45;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 235px;
+            flex-shrink: 0;
+            padding: 28px 18px;
+            background: linear-gradient(180deg, #352b75, #5746b5);
+            color: white;
+        }
+
+        .brand {
+            font-size: 21px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .brand-sub {
+            font-size: 12px;
+            color: #d8d2ff;
+            margin-bottom: 38px;
+        }
+
+        .nav-title {
+            color: #c9c3f4;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin: 22px 10px 12px;
+        }
+
+        .nav-link {
+            display: block;
+            color: #f4f2ff;
+            padding: 13px 12px;
+            margin: 6px 0;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .nav-link:hover, .nav-active {
+            background: #ffffff25;
+        }
+
+        .main {
+            flex: 1;
+            min-width: 0;
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+        }
+
+        h1 {
+            margin: 0 0 7px;
+            font-size: 27px;
+            color: #252b45;
+        }
+
+        .muted {
+            color: #7b8199;
+            font-size: 14px;
+        }
+
+        .profile {
+            padding: 11px 16px;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 3px 15px #2734690b;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .welcome {
+            padding: 25px;
+            border-radius: 18px;
+            color: white;
+            background: linear-gradient(110deg, #6254d9, #9384f5);
+            margin-bottom: 24px;
+            box-shadow: 0 10px 25px #6254d925;
+        }
+
+        .welcome h2 {
+            margin: 0 0 8px;
+            font-size: 22px;
+        }
+
+        .welcome p {
+            margin: 0;
+            color: #f0edff;
+            line-height: 1.6;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 26px;
+        }
+
+        .stat {
+            padding: 22px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 18px #2734690a;
+            border-bottom: 4px solid #7567e8;
+        }
+
+        .stat:nth-child(2) { border-color: #22b58a; }
+        .stat:nth-child(3) { border-color: #f3aa43; }
+
+        .stat-label {
+            color: #7b8199;
+            font-size: 13px;
+            margin-bottom: 13px;
+        }
+
+        .stat-value {
+            font-size: 30px;
+            font-weight: 800;
+            color: #292e4a;
+        }
+
+        .section {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 18px #2734690a;
+            overflow-x: auto;
+        }
+
+        .section h2 {
+            margin: 0 0 20px;
+            font-size: 19px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            min-width: 680px;
+            font-size: 13px;
+        }
+
+        th {
+            text-align: left;
+            padding: 14px 12px;
+            background: #f1efff;
+            color: #5145a3;
+        }
+
+        td {
+            padding: 14px 12px;
+            border-bottom: 1px solid #edf0f6;
+        }
+
+        tbody tr:hover { background: #fafaff; }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .pass { color: #087c58; background: #d9f8eb; }
+        .fail { color: #bd3030; background: #ffe2e2; }
+        .grade { color: #5145a3; background: #e9e5ff; }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dfe2ee;
+            border-radius: 9px;
+            background: #fcfcff;
+            font: inherit;
+            outline: none;
+        }
+
+        input:focus, textarea:focus { border-color: #7567e8; }
+
+        .btn {
+            display: inline-block;
+            border: none;
+            border-radius: 9px;
+            padding: 12px 18px;
+            margin-top: 16px;
+            background: #6557d9;
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn:hover { background: #4e41bb; }
+        .btn-danger { background: #e05261; padding: 8px 11px; margin: 0; }
+        .btn-danger:hover { background: #bd3342; }
+        .btn-green { background: #15966e; }
+        .btn-green:hover { background: #087b59; }
+
+        .notice {
+            padding: 12px 15px;
+            border-radius: 10px;
+            background: #e7f7ed;
+            color: #176d42;
+            margin-bottom: 18px;
+        }
+
+        .request {
+            padding: 15px;
+            border: 1px solid #ececf5;
+            border-radius: 11px;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .request small { color: #7b8199; }
+
+        @media (max-width: 900px) {
+            .sidebar { width: 190px; }
+            .main { padding: 20px; }
+            .stats { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 600px) {
+            .layout { display: block; }
+            .sidebar { width: 100%; }
+            .brand-sub { margin-bottom: 15px; }
+            .nav-title { margin-top: 14px; }
+            .main { padding: 15px; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="brand">🎓 Student Portal</div>
+        <div class="brand-sub">Performance Analysis System</div>
+
+        <div class="nav-title">Main Menu</div>
+
+        <a class="nav-link nav-active"
+           href="{{ url_for('dashboard') }}">▦ Dashboard</a>
+
+        <a class="nav-link"
+           href="{{ url_for('portal_page', page='analytics') }}">📊 Analytics</a>
+
+        {% if role == 'admin' %}
+            <a class="nav-link" href="#students">👥 Student Records</a>
+            <a class="nav-link" href="#add-student">➕ Add Student</a>
+            <a class="nav-link" href="{{ url_for('daa_page') }}">🧠 DAA Algorithms</a>
+        {% else %}
+            <a class="nav-link" href="#students">📚 My Performance</a>
+        {% endif %}
+
+        <a class="nav-link" href="#grievances">✉ Requests & Grievances</a>
+        <a class="nav-link" href="{{ url_for('portal_page', page='help') }}">❔ Help</a>
+
+        <div class="nav-title">Account</div>
+        <a class="nav-link" href="{{ url_for('logout') }}">↪ Logout</a>
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+            <div>
+                <h1>Dashboard Overview</h1>
+                <div class="muted">Your academic performance at a glance</div>
+            </div>
+
+            <div class="profile">
+                👤 {{ name if role == 'student' else 'Administrator' }}
+            </div>
+        </header>
+
+        {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+                <div class="notice">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        <section class="welcome">
+            <h2>
+                {% if role == 'admin' %}
+                    Welcome back, Administrator! 👋
+                {% else %}
+                    Welcome, {{ name }}! 👋
+                {% endif %}
+            </h2>
+
+            <p>
+                {% if role == 'admin' %}
+                    Manage student records, monitor academic results and review requests.
+                {% else %}
+                    Review your marks, attendance and academic progress in one place.
+                {% endif %}
+            </p>
+        </section>
+
+        <section class="stats">
+
+            <div class="stat">
+                <div class="stat-label">
+                    {% if role == 'admin' %}
+                        Average Class Percentage
+                    {% else %}
+                        Your Percentage
+                    {% endif %}
+                </div>
+                <div class="stat-value">{{ average }}%</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">
+                    {% if role == 'admin' %}
+                        Class Pass Rate
+                    {% else %}
+                        Your Result Status
+                    {% endif %}
+                </div>
+
+                <div class="stat-value">
+                    {% if role == 'admin' %}
+                        {{ pass_rate }}%
+                    {% else %}
+                        {% if records and records[0].status == 'Pass' %}
+                            Pass
+                        {% else %}
+                            Fail
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">Attendance Below 75%</div>
+                <div class="stat-value">{{ low_attendance }}</div>
+            </div>
+
+        </section>
+
+        <section class="section" id="students">
+            <h2>
+                📚
+                {% if role == 'admin' %}
+                    Student Performance Records
+                {% else %}
+                    My Performance
+                {% endif %}
+            </h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Roll No.</th>
+                        <th>Student Name</th>
+                        <th>Maths</th>
+                        <th>Python</th>
+                        <th>English</th>
+                        <th>Attendance</th>
+                        <th>Percentage</th>
+                        <th>Grade</th>
+                        <th>Status</th>
+                        {% if role == 'admin' %}
+                            <th>Action</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for r in records %}
+                    <tr>
+                        <td>{{ r.roll }}</td>
+                        <td>{{ r.name }}</td>
+                        <td>{{ r.maths }}</td>
+                        <td>{{ r.python }}</td>
+                        <td>{{ r.english }}</td>
+                        <td>{{ r.attendance }}%</td>
+                        <td><strong>{{ r.percentage }}%</strong></td>
+                        <td><span class="badge grade">{{ r.grade }}</span></td>
+
+                        <td>
+                            {% if r.status == 'Pass' %}
+                                <span class="badge pass">Pass</span>
+                            {% else %}
+                                <span class="badge fail">Fail</span>
+                            {% endif %}
+                        </td>
+
+                        {% if role == 'admin' %}
+                        <td>
+                            <a class="btn"
+                               style="margin:0 0 8px; padding:8px 11px;"
+                               href="{{ url_for('edit_student', roll=r.roll) }}">
+                                Edit
+                            </a>
+
+                            <form method="POST"
+                                  action="{{ url_for('delete_student', roll=r.roll) }}"
+                                  onsubmit="return confirm('Delete this student record?');">
+
+                                <button class="btn btn-danger" type="submit">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                        {% endif %}
+                    </tr>
+
+                    {% else %}
+                    <tr>
+                        <td colspan="10">No student records found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        {% if role == 'admin' %}
+        <section class="section" id="add-student">
+            <h2>➕ Add New Student</h2>
+
+            <p class="muted">
+                Enter the student's details, marks and login credentials.
+            </p>
+
+            <form method="POST" action="{{ url_for('add_student') }}">
+
+                <div class="form-grid">
+
+                    <div>
+                        <label>Roll Number</label>
+                        <input name="roll" required placeholder="e.g. 202">
+                    </div>
+
+                    <div>
+                        <label>Student Name</label>
+                        <input name="name" required placeholder="Full name">
+                    </div>
+
+                    <div>
+                        <label>Maths Marks (0–100)</label>
+                        <input type="number" name="maths"
+                               min="0" max="100" step="0.01" required>
+                    </div>
+
+                    <div>
+                        <label>Python Marks (0–100)</label>
+                        <input type="number" name="python"
+                               min="0" max="100" step="0.01" required>
+                    </div>
+
+                    <div>
+                        <label>English Marks (0–100)</label>
+                        <input type="number" name="english"
+                               min="0" max="100" step="0.01" required>
+                    </div>
+
+                    <div>
+                        <label>Attendance (0–100)</label>
+                        <input type="number" name="attendance"
+                               min="0" max="100" step="0.01" required>
+                    </div>
+
+                    <div>
+                        <label>Student Username</label>
+                        <input name="username" required placeholder="Choose username">
+                    </div>
+
+                    <div>
+                        <label>Student Password</label>
+                        <input type="password" name="password"
+                               required placeholder="Choose password">
+                    </div>
+
+                </div>
+
+                <button class="btn" type="submit">Add Student +</button>
+            </form>
+        </section>
+        {% endif %}
+
+        <section class="section" id="grievances">
+            <h2>✉ Requests & Grievances</h2>
+
+            {% if role == 'student' %}
+                <form method="POST" action="{{ url_for('grievance') }}">
+
+                    <label>Write your request or grievance</label>
+
+                    <textarea name="message" rows="3" required
+                              placeholder="Enter your message here..."></textarea>
+
+                    <button class="btn btn-green" type="submit">
+                        Submit Request
+                    </button>
+                </form>
+
+                <hr style="border:0;border-top:1px solid #edf0f6;margin:25px 0;">
+            {% endif %}
+
+            {% for g in grievances %}
+                <div class="request">
+
+                    <strong>{{ g.username }}</strong>
+                    <p>{{ g.message }}</p>
+                    <small>Status: {{ g.status }}</small>
+
+                    {% if role == 'admin' and g.status != 'Resolved' %}
+                        <form method="POST"
+                              action="{{ url_for('resolve', gid=g.id) }}">
+
+                            <button class="btn btn-green" type="submit">
+                                Mark Resolved
+                            </button>
+                        </form>
+                    {% endif %}
+
+                </div>
+            {% else %}
+                <p class="muted">No requests or grievances to display.</p>
+            {% endfor %}
+        </section>
+
+        <p class="muted" style="text-align:center;padding:10px;">
+            Student Performance Analysis System · Academic Dashboard
+        </p>
+
+    </main>
+</div>
+</body>
+</html>

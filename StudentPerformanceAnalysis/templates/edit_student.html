@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Student</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+        }
+
+        .card {
+            background: white;
+            width: 520px;
+            max-width: 100%;
+            padding: 32px;
+            border-radius: 20px;
+            box-shadow: 0 15px 45px #29205c35;
+        }
+
+        h1 { color: #302c65; margin: 0 0 8px; }
+
+        .subtitle {
+            color: #7b8199;
+            margin-bottom: 25px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 7px;
+            color: #42415e;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d9d9e8;
+            border-radius: 9px;
+            font-size: 15px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #7567e8;
+        }
+
+        .full { grid-column: 1 / -1; }
+
+        button, .back {
+            display: inline-block;
+            padding: 13px 18px;
+            margin-top: 23px;
+            border: none;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        button {
+            background: linear-gradient(100deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .back {
+            background: #f0efff;
+            color: #5145a3;
+            margin-left: 8px;
+        }
+
+        .message {
+            color: #b42318;
+            background: #fff0ee;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 450px) {
+            .grid { grid-template-columns: 1fr; }
+            .full { grid-column: auto; }
+            .card { padding: 22px; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>✏️ Edit Student</h1>
+        <p class="subtitle">Update student information and academic marks.</p>
+
+        {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+                <p class="message">{{ message }}</p>
+            {% endfor %}
+        {% endwith %}
+
+        <form method="POST">
+            <div class="grid">
+                <div class="full">
+                    <label>Roll Number</label>
+                    <input value="{{ student['roll'] }}" disabled>
+                </div>
+
+                <div class="full">
+                    <label>Student Name</label>
+                    <input name="name" value="{{ student['name'] }}" required>
+                </div>
+
+                <div>
+                    <label>Maths Marks</label>
+                    <input type="number" name="maths"
+                           value="{{ student['maths'] }}" min="0" max="100"
+                           step="0.01" required>
+                </div>
+
+                <div>
+                    <label>Python Marks</label>
+                    <input type="number" name="python"
+                           value="{{ student['python'] }}" min="0" max="100"
+                           step="0.01" required>
+                </div>
+
+                <div>
+                    <label>English Marks</label>
+                    <input type="number" name="english"
+                           value="{{ student['english'] }}" min="0" max="100"
+                           step="0.01" required>
+                </div>
+
+                <div>
+                    <label>Attendance (%)</label>
+                    <input type="number" name="attendance"
+                           value="{{ student['attendance'] }}" min="0" max="100"
+                           step="0.01" required>
+                </div>
+            </div>
+
+            <button type="submit">Save Changes ✓</button>
+            <a class="back" href="{{ url_for('dashboard') }}">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>

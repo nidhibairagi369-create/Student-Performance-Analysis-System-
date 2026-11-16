@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAA - Student Analysis</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 25px;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #1d4ed8;
+        }
+
+        .section {
+            background: white;
+            padding: 22px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #00000012;
+            overflow-x: auto;
+        }
+
+        h2 {
+            color: #1e40af;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #dbeafe;
+        }
+
+        input {
+            padding: 11px;
+            width: 220px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+
+        button, .back {
+            padding: 11px 18px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        button:hover, .back:hover {
+            background: #1d4ed8;
+        }
+
+        .message {
+            color: #dc2626;
+            margin: 12px 0;
+        }
+
+        .empty {
+            color: #64748b;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>DAA - Student Performance Analysis</h1>
+    <p>Design and Analysis of Algorithms implementation</p>
+
+    <a class="back" href="{{ url_for('dashboard') }}">
+        Back to Dashboard
+    </a>
+
+    <!-- MERGE SORT -->
+    <div class="section">
+        <h2>1. Merge Sort - Student Ranking</h2>
+        <p>Students are ranked according to percentage in descending order.</p>
+
+        <table>
+            <tr>
+                <th>Rank</th>
+                <th>Roll Number</th>
+                <th>Name</th>
+                <th>Percentage</th>
+                <th>Grade</th>
+            </tr>
+
+            {% for student in ranked_records %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ student.roll }}</td>
+                <td>{{ student.name }}</td>
+                <td>{{ student.percentage }}%</td>
+                <td>{{ student.grade }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5">No student records available.</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <!-- BINARY SEARCH -->
+    <div class="section">
+        <h2>2. Binary Search - Find Student</h2>
+        <p>Enter a roll number to search for a student.</p>
+
+        <form method="POST" action="{{ url_for('daa_page') }}">
+            <input
+                type="text"
+                name="roll"
+                placeholder="Enter roll number"
+                value="{{ searched_roll }}"
+                required
+            >
+            <button type="submit">Search Student</button>
+        </form>
+
+        {% if search_result %}
+        <h3>Student Found</h3>
+
+        <table>
+            <tr>
+                <th>Roll Number</th>
+                <th>Name</th>
+                <th>Percentage</th>
+                <th>Grade</th>
+            </tr>
+            <tr>
+                <td>{{ search_result.roll }}</td>
+                <td>{{ search_result.name }}</td>
+                <td>{{ search_result.percentage }}%</td>
+                <td>{{ search_result.grade }}</td>
+            </tr>
+        </table>
+        {% endif %}
+    </div>
+
+    <!-- LINEAR SEARCH -->
+    <div class="section">
+        <h2>3. Linear Search - Low Performing Students</h2>
+        <p>Students having less than 60% marks are displayed below.</p>
+
+        <table>
+            <tr>
+                <th>Roll Number</th>
+                <th>Name</th>
+                <th>Percentage</th>
+                <th>Grade</th>
+            </tr>
+
+            {% for student in low_performers %}
+            <tr>
+                <td>{{ student.roll }}</td>
+                <td>{{ student.name }}</td>
+                <td>{{ student.percentage }}%</td>
+                <td>{{ student.grade }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4">No low-performing students found.</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</div>
+</body>
+</html>
